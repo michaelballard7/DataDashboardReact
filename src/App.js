@@ -3,15 +3,18 @@ import './App.css';
 import styled from 'styled-components'
 
 
-const CustomElement = styled.div `
-  color: green;
-  font-size: 30px;
-
+const Logo = styled.div`
+  font-size: 1.5em;
 `
 
+const Controlbtn = styled.div`
+ 
+`
 
-const BlueElement = CustomElement.extend` 
-  color: blue;
+const AppLayout = styled.div`
+  padding: 40pct;
+  display: grid;
+  grid-template-columns: 100px auto 100px 100px;
 
 `
 
@@ -20,15 +23,22 @@ class App extends Component {
   render() {
     // here are the child components
     return (
-      <div>
-        <CustomElement>
-          Hello Green
-        </CustomElement>
-        <BlueElement>
-          Hello Blue
-        </BlueElement>
+      // Parent component???
+     <AppLayout>
+       <Logo >
+         AssetDash
+       </Logo>
+       <div>
        </div>
-    );
+       <Controlbtn>
+         Dashboard
+       </Controlbtn>
+       <Controlbtn >
+         Settings
+       </Controlbtn>
+     </AppLayout>
+      
+      );
   }
 }
 
