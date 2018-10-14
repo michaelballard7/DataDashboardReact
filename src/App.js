@@ -11,38 +11,67 @@ const Controlbtn = styled.div`
   cursor: pointer;
   ${props => props.active && css`
     text-shadow: 0px 0px 60px #03ff03;
-  `
-  }
-  
-
+  `} 
 `
-
 const AppLayout = styled.div`
-  padding: 40pct; 
-
+  padding: 40px; 
 `
 const Bar = styled.div`
   display: grid; 
   margin-bottom: 40px;
   grid-template-columns: 180px auto 100px 100px;
-
 `
-
 const Content = styled.div` 
-
 `
+
+const checkFirstVisit = () => {
+  let cryptoDash = localStorage.getItem('assetDash')
+  if(!cryptoDash){
+    return {
+      firstVisit: true, 
+      page: 'settings'
+    }
+  }
+  return {}
+}
 
 // this is the parent component
 class App extends Component {
 
+
   // set state in this object which is refereence in the component render
   state = {
-    page: 'dashboard'
+    page: 'dashboard',
+    ...checkFirstVisit()
   }
-
-  // define a helpers to under what is active on the page
+  // define a helper function to determine what state is active on the page
   displayingDashboard = () => this.state.page === 'dashboard'
   displayingSetting = () => this.state.page === 'settings'
+  firstVisitMessage = () => {
+    if(this.state.firstVisit){
+      return ( <div>Welcome to AssetDash, please select your favorite coins to begin!</div>)
+    }
+  }
+
+  confirmFavorites = ()=> {
+    localStorage.setItem('assetDash', 'test');
+    this.setState({
+      firstVisit: false,
+      page: 'dashboard'
+    })
+  }
+
+  settingsContent = () =>{
+    return (
+      <div>
+        {this.firstVisitMessage()}
+        <div onClick={this.confirmFavorites}>
+          Confirm Favorites
+        </div>
+      </div>
+    )
+  }
+
 
   render() {
     // here are the child components
@@ -51,21 +80,21 @@ class App extends Component {
       // below begins a JSX block
     <AppLayout> 
       <Bar>
-        <Logo >
+        <Logo>
           AssetDash
         </Logo>
         <div>
         </div>
         {/* add a click handler and define what state is */}
-        <Controlbtn onClick = {()=>{this.setState({page: 'dashboard'})}} active={this.displayingDashboard()}>
+       {!this.state.firstVisit && ( <Controlbtn onClick = {()=>{this.setState({page: 'dashboard'})}} active={this.displayingDashboard()}>
           Dashboard
-        </Controlbtn>
+        </Controlbtn>)}
         <Controlbtn onClick = {()=>{this.setState({page: 'settings'})}} active={this.displayingSetting()}>
           Settings
         </Controlbtn>
       </Bar>
       <Content>
-        Hi Im {this.state.page}
+        {this.displayingSetting() && this.settingsContent()}
       </Content>
      </AppLayout>
       );
