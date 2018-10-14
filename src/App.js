@@ -1,26 +1,13 @@
 import React, { Component } from 'react';
 import './App.css';
 import styled,{css} from 'styled-components'
+import AppBar from './appbar.js'
+const cc = require('cryptocompare')
 
-
-const Logo = styled.div`
-  font-size: 1.5em;
-`
-
-const Controlbtn = styled.div`
-  cursor: pointer;
-  ${props => props.active && css`
-    text-shadow: 0px 0px 60px #03ff03;
-  `} 
-`
 const AppLayout = styled.div`
   padding: 40px; 
 `
-const Bar = styled.div`
-  display: grid; 
-  margin-bottom: 40px;
-  grid-template-columns: 180px auto 100px 100px;
-`
+
 const Content = styled.div` 
 `
 
@@ -37,22 +24,34 @@ const checkFirstVisit = () => {
 
 // this is the parent component
 class App extends Component {
-
-
   // set state in this object which is refereence in the component render
   state = {
-    page: 'dashboard',
+    page: 'settings',
     ...checkFirstVisit()
   }
-  // define a helper function to determine what state is active on the page
+
+
+  componentDidMount = () => {
+    this.fetchCoins();
+  }
+
+  fetchCoins = async () =>{
+    let coinList = (await cc.coinList()).Data;
+    this.setState({coinList});
+  }
+
+  // define a helper functions to determine what state is active on the page
   displayingDashboard = () => this.state.page === 'dashboard'
   displayingSetting = () => this.state.page === 'settings'
+
+  // define a helper function to determine if this is the first visit
   firstVisitMessage = () => {
     if(this.state.firstVisit){
       return ( <div>Welcome to AssetDash, please select your favorite coins to begin!</div>)
     }
   }
 
+  // define a helper function to establish local storage
   confirmFavorites = ()=> {
     localStorage.setItem('assetDash', 'test');
     this.setState({
@@ -60,6 +59,7 @@ class App extends Component {
       page: 'dashboard'
     })
   }
+
 
   settingsContent = () =>{
     return (
@@ -72,30 +72,27 @@ class App extends Component {
     )
   }
 
+  loadingContent = () => {
+    if(!this.state.coinList){
+      return <div>
+        Loading Coins
+      </div>
+    } 
+  }
+
 
   render() {
     // here are the child components
     return (
       // Parent component!!!
       // below begins a JSX block
-    <AppLayout> 
-      <Bar>
-        <Logo>
-          AssetDash
-        </Logo>
-        <div>
-        </div>
-        {/* add a click handler and define what state is */}
-       {!this.state.firstVisit && ( <Controlbtn onClick = {()=>{this.setState({page: 'dashboard'})}} active={this.displayingDashboard()}>
-          Dashboard
-        </Controlbtn>)}
-        <Controlbtn onClick = {()=>{this.setState({page: 'settings'})}} active={this.displayingSetting()}>
-          Settings
-        </Controlbtn>
-      </Bar>
-      <Content>
+    <AppLayout>
+      {/* make a call to the appBar component module  */}
+      {AppBar.call(this)}
+
+      {this.loadingContent() || <Content>
         {this.displayingSetting() && this.settingsContent()}
-      </Content>
+      </Content>}
      </AppLayout>
       );
   }
