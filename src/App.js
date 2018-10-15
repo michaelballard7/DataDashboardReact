@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import styled,{css} from 'styled-components'
 import AppBar from './appbar.js'
+import CoinList from './CoinList.js'
 const cc = require('cryptocompare')
 
 const AppLayout = styled.div`
@@ -66,7 +67,10 @@ class App extends Component {
       <div>
         {this.firstVisitMessage()}
         <div onClick={this.confirmFavorites}>
-          Confirm Favorites
+          Choose Favorite Coins: 
+        </div>
+        <div>
+          {CoinList.call(this)}
         </div>
       </div>
     )
