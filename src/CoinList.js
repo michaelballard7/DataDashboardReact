@@ -5,7 +5,7 @@ import _ from 'lodash'
 
 
 // create the css grid layout
-const CoinGrid = styled.div`
+export const CoinGrid = styled.div`
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr  1fr;
     ${props => props.count && css`
@@ -15,7 +15,7 @@ const CoinGrid = styled.div`
     margin-top: 40px;
 `
 
-const CoinTile = styled.div`
+export const CoinTile = styled.div`
     ${subtleBoxShadow}
     ${lightBlueBackground}
     padding: 10px;
@@ -39,13 +39,13 @@ const CoinTile = styled.div`
     `}
 `
 
-const CoinHeaderGrid = styled.div`
+export const CoinHeaderGrid = styled.div`
     display: grid;
     grid-template-columns: 1fr 1fr;
 
 `
 
-const CoinSymbol = styled.div`
+export const CoinSymbol = styled.div`
     justify-self: right;
 `
 

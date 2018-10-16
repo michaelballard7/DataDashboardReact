@@ -3,6 +3,7 @@ import './App.css';
 import styled,{css} from 'styled-components'
 import AppBar from './appbar.js'
 import Search from './Search'
+import Dashboard from './Dashboard'
 import CoinList from './CoinList.js'
 import {ConfirmButton} from './Button.js'
 import fuzzy from 'fuzzy'
@@ -27,21 +28,23 @@ export const CenterDiv = styled.div`
 const MAX_FAVORITES = 10
 
 const checkFirstVisit = () => {
-  let cryptoDash = localStorage.getItem('assetDash')
+  let cryptoDash = JSON.parse(localStorage.getItem('assetDash')) 
   if(!cryptoDash){
     return {
       firstVisit: true, 
       page: 'settings'
     }
   }
-  return {}
+  return {
+    favorites: cryptoDash.favorites
+  }
 }
 
 // this is the parent component
 class App extends Component {
   // set state in this object which is refereence in the component render
   state = {
-    page: 'settings',
+    page: 'dashboard',
     favorites: ['ETH', 'BTC', 'XMR', 'DOGE', 'EOS'],
     ...checkFirstVisit()  // study the uses of the spread
   }
@@ -49,11 +52,31 @@ class App extends Component {
 
   componentDidMount = () => {
     this.fetchCoins();
+    this.fetchPrices();
   }
 
   fetchCoins = async () =>{
     let coinList = (await cc.coinList()).Data;
     this.setState({coinList});
+  }
+
+  fetchPrices = async () => {
+    let prices;
+    try {
+      prices = await this.prices();
+    } catch(e){
+      this.setState({error: true});
+    }
+    console.log(prices)
+    this.setState({prices})
+  }
+
+  prices = () => {
+    let promises = [];
+    this.state.favorites.forEach(sym => {
+      promises.push(cc.priceFull(sym,'USD'))
+    });
+    return Promise.all(promises)
   }
 
   // define a helper functions to determine what state is active on the page
@@ -71,8 +94,10 @@ class App extends Component {
   confirmFavorites = ()=> {
     this.setState({
       firstVisit: false,
-      page: 'dashboard'
+      page: 'dashboard',
+      prices: null
     })
+    this.fetchPrices()
     localStorage.setItem('assetDash', JSON.stringify({
       favorites: this.state.favorites
     }) );
@@ -104,6 +129,9 @@ class App extends Component {
         Loading Coins
       </div>
     } 
+    if (!this.state.prices){
+      return <div> Loading Prices </div>
+    }
   }
 
 
@@ -159,6 +187,7 @@ class App extends Component {
 
       {this.loadingContent() || <Content>
         {this.displayingSetting() && this.settingsContent()}
+        {this.displayingDashboard() && Dashboard.call(this)}
       </Content>}
      </AppLayout>
       );
