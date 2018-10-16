@@ -2,8 +2,13 @@ import React, { Component } from 'react';
 import './App.css';
 import styled,{css} from 'styled-components'
 import AppBar from './appbar.js'
+import Search from './Search'
 import CoinList from './CoinList.js'
+import {ConfirmButton} from './Button.js'
+import fuzzy from 'fuzzy'
 import _ from 'lodash'
+
+
 const cc = require('cryptocompare')
 
 const AppLayout = styled.div`
@@ -11,6 +16,12 @@ const AppLayout = styled.div`
 `
 
 const Content = styled.div` 
+`
+
+export const CenterDiv = styled.div`
+  display: grid;
+  justify-content: center;
+
 `
 
 const MAX_FAVORITES = 10
@@ -58,11 +69,13 @@ class App extends Component {
 
   // define a helper function to establish local storage
   confirmFavorites = ()=> {
-    localStorage.setItem('assetDash', 'test');
     this.setState({
       firstVisit: false,
       page: 'dashboard'
     })
+    localStorage.setItem('assetDash', JSON.stringify({
+      favorites: this.state.favorites
+    }) );
   }
 
 
@@ -70,12 +83,16 @@ class App extends Component {
     return (
       <div>
         {this.firstVisitMessage()}
-        <div onClick={this.confirmFavorites}>
-          Choose Favorite Coins: 
-        </div>
         <div>
           {CoinList.call(this, true)}
+          <CenterDiv>
+          <ConfirmButton onClick={this.confirmFavorites}> 
+              Select Coins Follow: 
+           </ConfirmButton>
+          </CenterDiv>
+          {Search.call(this)}
           {CoinList.call(this)}
+          
         </div>
       </div>
     )
@@ -105,9 +122,30 @@ class App extends Component {
     this.setState({favorites:_.pull(favorites, key)}) //low dash call .pull()
   }
 
-  isInFavorites = (key)=>{
-    return _.includes(this.state.favorites, key)
+  isInFavorites = (key)=>  _.includes(this.state.favorites, key)
 
+  handleFilter = _.debounce( (inputValue) => {
+    let coinSymbols = Object.keys(this.state.coinList);
+    let coinNames = coinSymbols.map(sym => this.state.coinList[sym].CoinName);
+    let allStringsToSearch = coinSymbols.concat(coinNames);
+    let fuzzyResults = fuzzy.filter(inputValue, allStringsToSearch, {}).map(result => result.string);
+    let filteredCoins = _.pickBy(this.state.coinList, (result, symKey)=> {
+      let coinName = result.CoinName;
+      // if fuzzy results contains this symbol  or the coinName, include it (return true)
+      return _.includes(fuzzyResults, symKey) || _.includes(fuzzyResults, coinName)
+    })
+    this.setState({filteredCoins})
+  }, 500)
+
+  filterCoins = (e) => {
+    let inputValue= _.get(e, 'target.value' )
+    if(!inputValue){
+      this.setState({
+        filteredCoins: null
+      })
+      return;
+    }
+    this.handleFilter(inputValue)
   }
 
   render() {
