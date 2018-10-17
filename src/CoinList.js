@@ -3,7 +3,6 @@ import styled,{css} from 'styled-components'
 import {subtleBoxShadow,greenBoxShadow, redBoxShadow, lightBlueBackground} from './Style'
 import _ from 'lodash'
 
-
 // create the css grid layout
 export const CoinGrid = styled.div`
     display: grid;
@@ -14,7 +13,6 @@ export const CoinGrid = styled.div`
     grid-gap: 15px;
     margin-top: 40px;
 `
-
 export const CoinTile = styled.div`
     ${subtleBoxShadow}
     ${lightBlueBackground}
@@ -23,7 +21,7 @@ export const CoinTile = styled.div`
         cursor: pointer;
         ${greenBoxShadow}
     }
-
+    
     ${props => props.favorite && css`
         &:hover{
             cursor: pointer;
@@ -31,25 +29,26 @@ export const CoinTile = styled.div`
         }
 
     `}
+    ${props => props.dashboardFavorite && css`
+        ${greenBoxShadow}
 
+        &:hover{
+            pointer-events: none;
+        }
+    `}
     ${props => props.chosen && !props.favorite && css`
-    
         pointer-events: none;
         opacity: 0.4;
     `}
 `
-
 export const CoinHeaderGrid = styled.div`
     display: grid;
     grid-template-columns: 1fr 1fr;
 
 `
-
 export const CoinSymbol = styled.div`
     justify-self: right;
 `
-
-
 const DeleteIcon = styled.div`
     justify-self: right;
     display: none;
@@ -58,6 +57,7 @@ const DeleteIcon = styled.div`
         display: block;
     }
 `
+
 export default function(favorites=false){
     let coinKeys = favorites ? 
     this.state.favorites :
@@ -71,10 +71,7 @@ export default function(favorites=false){
                    { favorites ? <DeleteIcon> X </DeleteIcon> : <CoinSymbol> {this.state.coinList[coinKey].Symbol}</CoinSymbol>} 
                </CoinHeaderGrid>
                 {<img style={{height: '50px'}} src={`http://cryptocompare.com/${this.state.coinList[coinKey].ImageUrl}`}/>}
-
             </CoinTile>
-            
-            )}
-        
+            )}     
          </CoinGrid>
 }

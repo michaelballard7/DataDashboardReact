@@ -28,15 +28,17 @@ export const CenterDiv = styled.div`
 const MAX_FAVORITES = 10
 
 const checkFirstVisit = () => {
-  let cryptoDash = JSON.parse(localStorage.getItem('assetDash')) 
-  if(!cryptoDash){
+  let assetDash = JSON.parse(localStorage.getItem('assetDash')) 
+  if(!assetDash){
     return {
       firstVisit: true, 
       page: 'settings'
     }
   }
+  let {favorites, currentFavorite} = assetDash;
   return {
-    favorites: cryptoDash.favorites
+    favorites,
+    currentFavorite
   }
 }
 
@@ -48,7 +50,6 @@ class App extends Component {
     favorites: ['ETH', 'BTC', 'XMR', 'DOGE', 'EOS'],
     ...checkFirstVisit()  // study the uses of the spread
   }
-
 
   componentDidMount = () => {
     this.fetchCoins();
@@ -92,17 +93,19 @@ class App extends Component {
 
   // define a helper function to establish local storage
   confirmFavorites = ()=> {
+    let currentFavorite = this.state.favorites[0]
     this.setState({
       firstVisit: false,
       page: 'dashboard',
-      prices: null
+      prices: null,
+      currentFavorite
     })
     this.fetchPrices()
     localStorage.setItem('assetDash', JSON.stringify({
-      favorites: this.state.favorites
+      favorites: this.state.favorites,
+      currentFavorite
     }) );
   }
-
 
   settingsContent = () =>{
     return (
@@ -112,7 +115,7 @@ class App extends Component {
           {CoinList.call(this, true)}
           <CenterDiv>
           <ConfirmButton onClick={this.confirmFavorites}> 
-              Select Coins Follow: 
+              Select Coins From The Following, Malachi: 
            </ConfirmButton>
           </CenterDiv>
           {Search.call(this)}
@@ -134,6 +137,9 @@ class App extends Component {
     }
   }
 
+  iWantANewLife = (word) => {
+    console.log("I am not thrilled with what happening here")
+  }
 
   addCoinToFavorites = (key) => {
     console.log('Adding', key)
