@@ -1,7 +1,13 @@
-import React from 'react'
+import React from 'react';
 import {CoinGrid, CoinTile, CoinHeaderGrid, CoinSymbol} from "./CoinList"
 import styled, {css} from 'styled-components';
-import {fontSizeBig, fontSize3, subtleBoxShadow, lightBlueBackground} from './Style'
+import {fontSizeBig, fontSize3, subtleBoxShadow, lightBlueBackground} from './Style';
+import HighChartsConfig from './HighChartsConfig';
+import theme from './HighChartsTheme';
+
+const ReactHighcharts = require('react-highcharts')
+
+ReactHighcharts.Highcharts.setOptions(theme())
 
 
 const numberFormat = (number) => {
@@ -91,7 +97,10 @@ export default function () {
             <img style={{height: '200px', display: 'block', margin:'auto'}} src={`http://cryptocompare.com/${this.state.coinList[this.state.currentFavorite].ImageUrl}`}/>
         </PaddingBlue>
         <PaddingBlue>
-            Chart section goes here...
+            <ReactHighcharts config={HighChartsConfig.call(this)}>
+            
+            
+            </ReactHighcharts>
         </PaddingBlue>
     </ChartGrid>]
 
