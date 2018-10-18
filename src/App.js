@@ -8,6 +8,7 @@ import CoinList from './CoinList.js'
 import {ConfirmButton} from './Button.js'
 import fuzzy from 'fuzzy'
 import _ from 'lodash'
+import moment from 'moment';
 
 
 const cc = require('cryptocompare')
@@ -26,6 +27,7 @@ export const CenterDiv = styled.div`
 `
 
 const MAX_FAVORITES = 10
+const TIME_UNITS = 10
 
 const checkFirstVisit = () => {
   let assetDash = JSON.parse(localStorage.getItem('assetDash')) 
@@ -52,13 +54,36 @@ class App extends Component {
   }
 
   componentDidMount = () => {
+    this.fetchHistorical();
     this.fetchCoins();
     this.fetchPrices();
+    
   }
 
   fetchCoins = async () =>{
     let coinList = (await cc.coinList()).Data;
     this.setState({coinList});
+    console.log("The algo is",coinList['BTC'].Algorithm)
+  }
+
+  fetchHistorical = async () => {
+    if (this.state.currentFavorite){
+      let results = await this.historical();
+      let historical = [{
+        name: this.state.currentFavorite,
+        data: results.map((ticker, index) => [moment().subtract({months:TIME_UNITS - index}).valueOf(), ticker.USD])
+      }]
+      this.setState({historical});
+
+    }
+  }
+
+  historical = () => {
+    let promises = [];
+    for(let units = TIME_UNITS; units>0; units--){
+      promises.push(cc.priceHistorical(this.state.currentFavorite, ['USD'], moment().subtract({months: units}).toDate()))
+    }
+    return Promise.all(promises)
   }
 
   fetchPrices = async () => {
@@ -68,7 +93,6 @@ class App extends Component {
     } catch(e){
       this.setState({error: true});
     }
-    console.log(prices)
     this.setState({prices})
   }
 
@@ -98,9 +122,13 @@ class App extends Component {
       firstVisit: false,
       page: 'dashboard',
       prices: null,
-      currentFavorite
+      currentFavorite,
+      historical: null
+    }, ()=>{
+      this.fetchPrices()
+      this.fetchHistorical()
     })
-    this.fetchPrices()
+   
     localStorage.setItem('assetDash', JSON.stringify({
       favorites: this.state.favorites,
       currentFavorite

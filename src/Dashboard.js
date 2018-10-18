@@ -59,7 +59,7 @@ export default function () {
             let tileProps = {
                 dashboardFavorite: sym === self.state.currentFavorite,
                 onClick: () => {
-                    self.setState({currentFavorite: sym});
+                    self.setState({currentFavorite: sym, historical : null}, self.fetchHistorical);
                     localStorage.setItem('assetDash', JSON.stringify({
                         ...JSON.parse(localStorage.getItem('assetDash')),
                         currentFavorite: sym
@@ -97,10 +97,9 @@ export default function () {
             <img style={{height: '200px', display: 'block', margin:'auto'}} src={`http://cryptocompare.com/${this.state.coinList[this.state.currentFavorite].ImageUrl}`}/>
         </PaddingBlue>
         <PaddingBlue>
-            <ReactHighcharts config={HighChartsConfig.call(this)}>
-            
-            
-            </ReactHighcharts>
+           {this.state.historical ? <ReactHighcharts config={HighChartsConfig.call(this)}> </ReactHighcharts> : <div>
+               Loading Historical Pricing Data
+           </div>}
         </PaddingBlue>
     </ChartGrid>]
 
