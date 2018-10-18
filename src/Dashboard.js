@@ -54,6 +54,10 @@ export default function () {
                 dashboardFavorite: sym === self.state.currentFavorite,
                 onClick: () => {
                     self.setState({currentFavorite: sym});
+                    localStorage.setItem('assetDash', JSON.stringify({
+                        ...JSON.parse(localStorage.getItem('assetDash')),
+                        currentFavorite: sym
+                    }));    
                 }
             }
 
