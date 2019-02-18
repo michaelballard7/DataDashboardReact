@@ -16,7 +16,7 @@ self.__precacheManifest = [
     "url": "/DataDashboardReact/static/js/runtime~main.89b519c6.js"
   },
   {
-    "revision": "1db418774908140e13eda66c5d6c0875",
+    "revision": "2f38a146a5c2dc5641628fab3555962e",
     "url": "/DataDashboardReact/index.html"
   }
 ];
