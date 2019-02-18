@@ -74,4 +74,6 @@ export default function(favorites=false){
             </CoinTile>
             )}     
          </CoinGrid>
+
+        //  not going to load because of internet connection
 }

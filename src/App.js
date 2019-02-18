@@ -64,6 +64,7 @@ class App extends Component {
     let coinList = (await cc.coinList()).Data;
     this.setState({coinList});
     console.log("The algo is",coinList['BTC'].Algorithm)
+    console.log("Coin list is active")
   }
 
   fetchHistorical = async () => {
