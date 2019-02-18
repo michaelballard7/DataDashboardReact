@@ -144,7 +144,7 @@ class App extends Component {
           {CoinList.call(this, true)}
           <CenterDiv>
           <ConfirmButton onClick={this.confirmFavorites}> 
-              Select Coins From The Following, Malachi: 
+              Saved the Coins you searched: 
            </ConfirmButton>
           </CenterDiv>
           {Search.call(this)}
