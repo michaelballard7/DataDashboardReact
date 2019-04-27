@@ -10,14 +10,13 @@ import fuzzy from 'fuzzy'
 import _ from 'lodash'
 import moment from 'moment';
 
-
 const cc = require('cryptocompare')
 
 const AppLayout = styled.div`
-  padding: 40px; 
+  padding: 40px;
 `
 
-const Content = styled.div` 
+const Content = styled.div`
 `
 
 export const CenterDiv = styled.div`
@@ -30,10 +29,10 @@ const MAX_FAVORITES = 10
 const TIME_UNITS = 10
 
 const checkFirstVisit = () => {
-  let assetDash = JSON.parse(localStorage.getItem('assetDash')) 
+  let assetDash = JSON.parse(localStorage.getItem('assetDash'))
   if(!assetDash){
     return {
-      firstVisit: true, 
+      firstVisit: true,
       page: 'settings'
     }
   }
@@ -57,7 +56,7 @@ class App extends Component {
     this.fetchHistorical();
     this.fetchCoins();
     this.fetchPrices();
-    
+
   }
 
   fetchCoins = async () =>{
@@ -112,7 +111,7 @@ class App extends Component {
   // define a helper function to determine if this is the first visit
   firstVisitMessage = () => {
     if(this.state.firstVisit){
-      return ( <div>Welcome to AssetDash, please select your favorite coins to begin!</div>)
+      return ( <div>Welcome to AssetDash, please select coins you want to follow!</div>)
     }
   }
 
@@ -129,7 +128,7 @@ class App extends Component {
       this.fetchPrices()
       this.fetchHistorical()
     })
-   
+
     localStorage.setItem('assetDash', JSON.stringify({
       favorites: this.state.favorites,
       currentFavorite
@@ -143,13 +142,13 @@ class App extends Component {
         <div>
           {CoinList.call(this, true)}
           <CenterDiv>
-          <ConfirmButton onClick={this.confirmFavorites}> 
-              Saved the Coins you searched: 
+          <ConfirmButton onClick={this.confirmFavorites}>
+              Save the your searched Coins:
            </ConfirmButton>
           </CenterDiv>
           {Search.call(this)}
           {CoinList.call(this)}
-          
+
         </div>
       </div>
     )
@@ -160,7 +159,7 @@ class App extends Component {
       return <div>
         Loading Coins
       </div>
-    } 
+    }
     if (!this.state.prices){
       return <div> Loading Prices </div>
     }
