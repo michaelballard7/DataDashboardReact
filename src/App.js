@@ -143,7 +143,7 @@ class App extends Component {
           {CoinList.call(this, true)}
           <CenterDiv>
           <ConfirmButton onClick={this.confirmFavorites}>
-              Save the your searched Coins:
+              Display your searched coins:
            </ConfirmButton>
           </CenterDiv>
           {Search.call(this)}
