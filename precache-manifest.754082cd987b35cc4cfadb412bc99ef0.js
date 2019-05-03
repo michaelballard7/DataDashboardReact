@@ -1,11 +1,11 @@
 self.__precacheManifest = [
   {
-    "revision": "5088b1b44caf8d3ace70",
+    "revision": "773acaca8f715aab8e8b",
     "url": "/DataDashboardReact/static/css/main.518fb0aa.chunk.css"
   },
   {
-    "revision": "5088b1b44caf8d3ace70",
-    "url": "/DataDashboardReact/static/js/main.5088b1b4.chunk.js"
+    "revision": "773acaca8f715aab8e8b",
+    "url": "/DataDashboardReact/static/js/main.773acaca.chunk.js"
   },
   {
     "revision": "50a6d5a28fe9be5d291a",
@@ -16,7 +16,7 @@ self.__precacheManifest = [
     "url": "/DataDashboardReact/static/js/runtime~main.89b519c6.js"
   },
   {
-    "revision": "c9106ff05b9a1b3cb47fc952d7d15731",
+    "revision": "345bb6f56cb7ec5161e636419d5020d7",
     "url": "/DataDashboardReact/index.html"
   }
 ];
