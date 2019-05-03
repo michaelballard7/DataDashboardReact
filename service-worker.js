@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/DataDashboardReact/precache-manifest.754082cd987b35cc4cfadb412bc99ef0.js"
+  "/DataDashboardReact/precache-manifest.6443712daacbd00436fbbd9a9ebfa638.js"
 );
 
 workbox.clientsClaim();
